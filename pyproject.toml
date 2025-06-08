@@ -1,0 +1,11 @@
+[project]
+name = "mcp-fortigate"
+version = "0.1.0"
+description = "Simple MCP server to manage fortigate devices through llm"
+requires-python = ">=3.10"
+dependencies = [
+    "fortigate-api>=2.0.6",
+    "httpx>=0.28.1",
+    "mcp>=1.9.3",
+    "pyyaml>=6.0.2",
+]

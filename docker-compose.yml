@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  fortigate-mcp:
+    build: .
+    container_name: mcp-server-fortigate
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED = 1
+    restart: unless-stopped

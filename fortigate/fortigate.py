@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""
+Fortigate MCP Server using FastMCP
+Manages multiple Fortigate devices and VDOMs
+"""
+
+import json
+import logging
+import requests
+from typing import Dict, List, Optional, Any
+from urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+# Logging configuration
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("fortigate-mcp")
+
+
+class FortigateAPI:
+    """Class to manage Fortigate REST APIs"""
+
+    def __init__(self, host: str, token: str):
+        self.host = host.rstrip('/')
+        self.token = token
+        self.base_url = f"https://{self.host}/api/v2"
+        self.session = requests.Session()
+        self.session.headers.update({
+            'Authorization': f'Bearer {self.token}',
+            'Content-Type': 'application/json'
+        })
+        self.session.verify = False
+
+    def _make_request(self, method: str, endpoint: str, vdom: str = 'root',
+                      params: Dict = None, data: Dict = None) -> Dict:
+        """Executes API request with VDOM handling"""
+        url = f"{self.base_url}/{endpoint}"
+
+        # Add VDOM parameter if not root
+        if vdom != 'root':
+            params = params or {}
+            params['vdom'] = vdom
+
+        try:
+            response = self.session.request(
+                method=method,
+                url=url,
+                params=params,
+                json=data,
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API request failed: {e}")
+            raise
+
+    def get_system_status(self) -> Dict:
+        """Get system status"""
+        return self._make_request('GET', 'monitor/system/status')
+
+    def get_vdoms(self) -> List[Dict]:
+        """List all VDOMs"""
+        result = self._make_request('GET', 'cmdb/system/vdom')
+        return result.get('results', [])
+
+    def get_firewall_policies(self, vdom: str = 'root') -> List[Dict]:
+        """Get firewall policy list"""
+        result = self._make_request('GET', 'cmdb/firewall/policy', vdom=vdom)
+        return result.get('results', [])
+
+    def get_policy_by_id(self, policy_id: int, vdom: str = 'root') -> Dict:
+        """Get specific firewall policy by ID"""
+        result = self._make_request('GET', f'cmdb/firewall/policy/{policy_id}', vdom=vdom)
+        return result.get('results', {})
+
+    def create_firewall_policy(self, policy_data: Dict, vdom: str = 'root') -> Dict:
+        """Create new firewall policy"""
+        return self._make_request('POST', 'cmdb/firewall/policy', vdom=vdom, data=policy_data)
+
+    def update_firewall_policy(self, policy_id: int, policy_data: Dict, vdom: str = 'root') -> Dict:
+        """Update existing firewall policy"""
+        return self._make_request('PUT', f'cmdb/firewall/policy/{policy_id}', vdom=vdom, data=policy_data)
+
+    def delete_firewall_policy(self, policy_id: int, vdom: str = 'root') -> Dict:
+        """Delete firewall policy"""
+        return self._make_request('DELETE', f'cmdb/firewall/policy/{policy_id}', vdom=vdom)
+
+    def get_address_objects(self, vdom: str = 'root') -> List[Dict]:
+        """Get address objects"""
+        result = self._make_request('GET', 'cmdb/firewall/address', vdom=vdom)
+        return result.get('results', [])
+
+    def create_address_object(self, address_data: Dict, vdom: str = 'root') -> Dict:
+        """Create address object"""
+        return self._make_request('POST', 'cmdb/firewall/address', vdom=vdom, data=address_data)
+
+    def get_service_objects(self, vdom: str = 'root') -> List[Dict]:
+        """Get service objects"""
+        result = self._make_request('GET', 'cmdb/firewall/service/custom', vdom=vdom)
+        return result.get('results', [])
+
+    def create_service_object(self, service_data: Dict, vdom: str = 'root') -> Dict:
+        """Create service object"""
+        return self._make_request('POST', 'cmdb/firewall/service/custom', vdom=vdom, data=service_data)
+
+    def get_interfaces(self, vdom: str = 'root') -> List[Dict]:
+        """Get interface list"""
+        result = self._make_request('GET', 'cmdb/system/interface', vdom=vdom)
+        return result.get('results', [])
+
+    def get_static_routes(self, vdom: str = 'root') -> List[Dict]:
+        """Get static routes"""
+        result = self._make_request('GET', 'cmdb/router/static', vdom=vdom)
+        return result.get('results', [])
+
+    def create_static_route(self, route_data: Dict, vdom: str = 'root') -> Dict:
+        """Create static route"""
+        return self._make_request('POST', 'cmdb/router/static', vdom=vdom, data=route_data)
+
+    def get_policy_routes(self, vdom: str = 'root') -> List[Dict]:
+        """Get policy routes"""
+        result = self._make_request('GET', 'cmdb/router/policy', vdom=vdom)
+        return result.get('results', [])
+
+    def get_routing_table(self, vdom: str = 'root') -> List[Dict]:
+        """
+        Get the live routing table (like 'get router info routing-table all' in CLI)
+        for the specified VDOM (default 'root').
+        """
+        endpoint = 'monitor/router/ipv4'
+        result = self._make_request('GET', endpoint, vdom=vdom)
+        return result.get('results', [])
+
+
+class FortigateManager:
+    """Manages multiple Fortigate devices"""
+
+    def __init__(self):
+        self.devices: Dict[str, FortigateAPI] = {}
+        self.device_configs: Dict[str, Dict] = {}
+
+    def add_device(self, device_id: str, host: str, token: str, vdoms: List[str] = None):
+        """Add a new device"""
+        api = FortigateAPI(host, token)
+        self.devices[device_id] = api
+        self.device_configs[device_id] = {
+            'host': host,
+            'vdoms': vdoms or ['root']
+        }
+        logger.info(f"Added device {device_id} at {host}")
+
+    def get_device(self, device_id: str) -> FortigateAPI:
+        """Get API instance for device"""
+        if device_id not in self.devices:
+            raise ValueError(f"Device {device_id} not found")
+        return self.devices[device_id]
+
+    def list_devices(self) -> List[Dict]:
+        """List all configured devices"""
+        return [
+            {
+                'device_id': device_id,
+                'host': config['host'],
+                'vdoms': config['vdoms']
+            }
+            for device_id, config in self.device_configs.items()
+        ]

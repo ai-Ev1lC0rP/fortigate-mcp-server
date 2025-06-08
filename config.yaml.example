@@ -1,0 +1,11 @@
+devices:
+  "device-1":
+    host: "192.168.1.1:10443"
+    token: "XXXXXXXXXXXXX"
+    vdoms: ["root", "vdom1", "vdom2"]
+    description: "Firewall Datacenter1"
+  "device-2":
+    host: "192.168.10.1:10443"
+    token: "XXXXXXXXXXX"
+    vdoms: ["root", "vdom-m1"]
+    description: "Firewall Datacenter2"
