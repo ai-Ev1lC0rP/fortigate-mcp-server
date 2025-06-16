@@ -1,5 +1,6 @@
 import json
 from mcp.server import FastMCP
+
 from typing import Dict, List, Optional, Any
 from fortigate.fortigate import FortigateManager
 

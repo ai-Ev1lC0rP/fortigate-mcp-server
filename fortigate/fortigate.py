@@ -13,7 +13,7 @@ from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Logging configuration
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("fortigate-mcp")
 
 
@@ -42,6 +42,7 @@ class FortigateAPI:
             params['vdom'] = vdom
 
         try:
+            logger.debug(f"making request to {url} with params {params}, data {data}, vdom {vdom}")
             response = self.session.request(
                 method=method,
                 url=url,
@@ -50,6 +51,7 @@ class FortigateAPI:
                 timeout=30
             )
             response.raise_for_status()
+            logger.debug(f"response: {response.text}")
             return response.json()
         except requests.exceptions.RequestException as e:
             logger.error(f"API request failed: {e}")
@@ -64,6 +66,7 @@ class FortigateAPI:
         result = self._make_request('GET', 'cmdb/system/vdom')
         return result.get('results', [])
 
+### Policy
     def get_firewall_policies(self, vdom: str = 'root') -> List[Dict]:
         """Get firewall policy list"""
         result = self._make_request('GET', 'cmdb/firewall/policy', vdom=vdom)
@@ -86,6 +89,22 @@ class FortigateAPI:
         """Delete firewall policy"""
         return self._make_request('DELETE', f'cmdb/firewall/policy/{policy_id}', vdom=vdom)
 
+    def lookup_firewall_policy(self, srcintf: str,source_ip: str,protocol: str,dest: str,source_port: int = 0,dest_port: int =0, vdom: str = 'root') -> Dict:
+        """Lookup existing firewall policy, simulating a packet"""
+        params = {
+            'srcintf': srcintf,
+            'sourceip': source_ip,
+            'protocol': protocol,
+            'dest': dest,
+        }
+        if source_port != 0:
+            params['sourceport'] = source_port
+        if dest_port != 0:
+            params['destport'] = dest_port
+
+        result = self._make_request('GET', f'monitor/firewall/policy-lookup', vdom=vdom,params=params )
+        return result.get('results', {})
+
     def get_address_objects(self, vdom: str = 'root') -> List[Dict]:
         """Get address objects"""
         result = self._make_request('GET', 'cmdb/firewall/address', vdom=vdom)
@@ -104,6 +123,17 @@ class FortigateAPI:
         """Create service object"""
         return self._make_request('POST', 'cmdb/firewall/service/custom', vdom=vdom, data=service_data)
 
+    def get_vip_addresses(self, vdom: str = 'root') -> List[Dict]:
+        """Get firewall virtual ip list"""
+        result = self._make_request('GET', 'cmdb/firewall/vip', vdom=vdom)
+        return result.get('results', [])
+
+    def delete_vip_address(self, vip_name: str, vdom: str = 'root') -> Dict:
+        """Delete firewall virtual ip address"""
+        result = self._make_request('DELETE', f'cmdb/firewall/vip/{vip_name}', vdom=vdom)
+        return result.get('results', [])
+
+    ### Network
     def get_interfaces(self, vdom: str = 'root') -> List[Dict]:
         """Get interface list"""
         result = self._make_request('GET', 'cmdb/system/interface', vdom=vdom)
@@ -131,6 +161,16 @@ class FortigateAPI:
         endpoint = 'monitor/router/ipv4'
         result = self._make_request('GET', endpoint, vdom=vdom)
         return result.get('results', [])
+### Routing dynamic
+    def get_bgp_peers(self, vdom: str = 'root') -> List[Dict]:
+        endpoint = 'monitor/router/bgp/neighbors'
+        result = self._make_request('GET', endpoint, vdom=vdom)
+        return result.get('results', [])
+
+    def route_lookup(self, route: str, vdom: str = 'root' ) -> Dict:
+        endpoint = 'monitor/router/lookup'
+        result = self._make_request('GET', endpoint, vdom=vdom, params={"destination": route})
+        return result.get('results',{})
 
 
 class FortigateManager:

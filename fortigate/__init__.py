@@ -1,1 +1,1 @@
-from fortigate import *
+from .fortigate import *
