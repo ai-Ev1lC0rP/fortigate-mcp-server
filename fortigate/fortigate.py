@@ -258,6 +258,71 @@ class FortigateAPI:
         """Delete DNS filter profile"""
         return self._make_request('DELETE', f'cmdb/dnsfilter/profile/{profile_name}', vdom=vdom)
 
+### User Management
+    def get_local_users(self, vdom: str = 'root') -> List[Dict]:
+        """Get local users"""
+        result = self._make_request('GET', 'cmdb/user/local', vdom=vdom)
+        return result.get('results', [])
+
+    def create_local_user(self, user_data: Dict, vdom: str = 'root') -> Dict:
+        """Create local user"""
+        return self._make_request('POST', 'cmdb/user/local', vdom=vdom, data=user_data)
+
+    def update_local_user(self, username: str, user_data: Dict, vdom: str = 'root') -> Dict:
+        """Update local user"""
+        return self._make_request('PUT', f'cmdb/user/local/{username}', vdom=vdom, data=user_data)
+
+    def delete_local_user(self, username: str, vdom: str = 'root') -> Dict:
+        """Delete local user"""
+        return self._make_request('DELETE', f'cmdb/user/local/{username}', vdom=vdom)
+
+    def get_user_groups(self, vdom: str = 'root') -> List[Dict]:
+        """Get user groups"""
+        result = self._make_request('GET', 'cmdb/user/group', vdom=vdom)
+        return result.get('results', [])
+
+    def create_user_group(self, group_data: Dict, vdom: str = 'root') -> Dict:
+        """Create user group"""
+        return self._make_request('POST', 'cmdb/user/group', vdom=vdom, data=group_data)
+
+    def update_user_group(self, group_name: str, group_data: Dict, vdom: str = 'root') -> Dict:
+        """Update user group"""
+        return self._make_request('PUT', f'cmdb/user/group/{group_name}', vdom=vdom, data=group_data)
+
+    def delete_user_group(self, group_name: str, vdom: str = 'root') -> Dict:
+        """Delete user group"""
+        return self._make_request('DELETE', f'cmdb/user/group/{group_name}', vdom=vdom)
+
+    def get_auth_servers(self, vdom: str = 'root') -> List[Dict]:
+        """Get authentication servers (LDAP)"""
+        result = self._make_request('GET', 'cmdb/user/ldap', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ldap_server(self, server_data: Dict, vdom: str = 'root') -> Dict:
+        """Create LDAP authentication server"""
+        return self._make_request('POST', 'cmdb/user/ldap', vdom=vdom, data=server_data)
+
+    def update_ldap_server(self, server_name: str, server_data: Dict, vdom: str = 'root') -> Dict:
+        """Update LDAP authentication server"""
+        return self._make_request('PUT', f'cmdb/user/ldap/{server_name}', vdom=vdom, data=server_data)
+
+    def delete_ldap_server(self, server_name: str, vdom: str = 'root') -> Dict:
+        """Delete LDAP authentication server"""
+        return self._make_request('DELETE', f'cmdb/user/ldap/{server_name}', vdom=vdom)
+
+    def get_radius_servers(self, vdom: str = 'root') -> List[Dict]:
+        """Get RADIUS authentication servers"""
+        result = self._make_request('GET', 'cmdb/user/radius', vdom=vdom)
+        return result.get('results', [])
+
+    def create_radius_server(self, server_data: Dict, vdom: str = 'root') -> Dict:
+        """Create RADIUS authentication server"""
+        return self._make_request('POST', 'cmdb/user/radius', vdom=vdom, data=server_data)
+
+    def delete_radius_server(self, server_name: str, vdom: str = 'root') -> Dict:
+        """Delete RADIUS authentication server"""
+        return self._make_request('DELETE', f'cmdb/user/radius/{server_name}', vdom=vdom)
+
 
 class FortigateManager:
     """Manages multiple Fortigate devices"""
