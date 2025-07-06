@@ -4,7 +4,8 @@
       "WebFetch(domain:docs.fortinet.com)",
       "Bash(python:*)",
       "Bash(find:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

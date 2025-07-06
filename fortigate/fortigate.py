@@ -172,6 +172,92 @@ class FortigateAPI:
         result = self._make_request('GET', endpoint, vdom=vdom, params={"destination": route})
         return result.get('results',{})
 
+### Security Profiles
+    def get_av_profiles(self, vdom: str = 'root') -> List[Dict]:
+        """Get antivirus profiles"""
+        result = self._make_request('GET', 'cmdb/antivirus/profile', vdom=vdom)
+        return result.get('results', [])
+
+    def create_av_profile(self, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Create antivirus profile"""
+        return self._make_request('POST', 'cmdb/antivirus/profile', vdom=vdom, data=profile_data)
+
+    def update_av_profile(self, profile_name: str, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Update antivirus profile"""
+        return self._make_request('PUT', f'cmdb/antivirus/profile/{profile_name}', vdom=vdom, data=profile_data)
+
+    def delete_av_profile(self, profile_name: str, vdom: str = 'root') -> Dict:
+        """Delete antivirus profile"""
+        return self._make_request('DELETE', f'cmdb/antivirus/profile/{profile_name}', vdom=vdom)
+
+    def get_webfilter_profiles(self, vdom: str = 'root') -> List[Dict]:
+        """Get web filter profiles"""
+        result = self._make_request('GET', 'cmdb/webfilter/profile', vdom=vdom)
+        return result.get('results', [])
+
+    def create_webfilter_profile(self, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Create web filter profile"""
+        return self._make_request('POST', 'cmdb/webfilter/profile', vdom=vdom, data=profile_data)
+
+    def update_webfilter_profile(self, profile_name: str, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Update web filter profile"""
+        return self._make_request('PUT', f'cmdb/webfilter/profile/{profile_name}', vdom=vdom, data=profile_data)
+
+    def delete_webfilter_profile(self, profile_name: str, vdom: str = 'root') -> Dict:
+        """Delete web filter profile"""
+        return self._make_request('DELETE', f'cmdb/webfilter/profile/{profile_name}', vdom=vdom)
+
+    def get_ips_sensors(self, vdom: str = 'root') -> List[Dict]:
+        """Get IPS sensors"""
+        result = self._make_request('GET', 'cmdb/ips/sensor', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ips_sensor(self, sensor_data: Dict, vdom: str = 'root') -> Dict:
+        """Create IPS sensor"""
+        return self._make_request('POST', 'cmdb/ips/sensor', vdom=vdom, data=sensor_data)
+
+    def update_ips_sensor(self, sensor_name: str, sensor_data: Dict, vdom: str = 'root') -> Dict:
+        """Update IPS sensor"""
+        return self._make_request('PUT', f'cmdb/ips/sensor/{sensor_name}', vdom=vdom, data=sensor_data)
+
+    def delete_ips_sensor(self, sensor_name: str, vdom: str = 'root') -> Dict:
+        """Delete IPS sensor"""
+        return self._make_request('DELETE', f'cmdb/ips/sensor/{sensor_name}', vdom=vdom)
+
+    def get_ssl_ssh_profiles(self, vdom: str = 'root') -> List[Dict]:
+        """Get SSL/SSH inspection profiles"""
+        result = self._make_request('GET', 'cmdb/firewall/ssl-ssh-profile', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ssl_ssh_profile(self, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Create SSL/SSH inspection profile"""
+        return self._make_request('POST', 'cmdb/firewall/ssl-ssh-profile', vdom=vdom, data=profile_data)
+
+    def update_ssl_ssh_profile(self, profile_name: str, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Update SSL/SSH inspection profile"""
+        return self._make_request('PUT', f'cmdb/firewall/ssl-ssh-profile/{profile_name}', vdom=vdom, data=profile_data)
+
+    def delete_ssl_ssh_profile(self, profile_name: str, vdom: str = 'root') -> Dict:
+        """Delete SSL/SSH inspection profile"""
+        return self._make_request('DELETE', f'cmdb/firewall/ssl-ssh-profile/{profile_name}', vdom=vdom)
+
+    def get_dnsfilter_profiles(self, vdom: str = 'root') -> List[Dict]:
+        """Get DNS filter profiles"""
+        result = self._make_request('GET', 'cmdb/dnsfilter/profile', vdom=vdom)
+        return result.get('results', [])
+
+    def create_dnsfilter_profile(self, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Create DNS filter profile"""
+        return self._make_request('POST', 'cmdb/dnsfilter/profile', vdom=vdom, data=profile_data)
+
+    def update_dnsfilter_profile(self, profile_name: str, profile_data: Dict, vdom: str = 'root') -> Dict:
+        """Update DNS filter profile"""
+        return self._make_request('PUT', f'cmdb/dnsfilter/profile/{profile_name}', vdom=vdom, data=profile_data)
+
+    def delete_dnsfilter_profile(self, profile_name: str, vdom: str = 'root') -> Dict:
+        """Delete DNS filter profile"""
+        return self._make_request('DELETE', f'cmdb/dnsfilter/profile/{profile_name}', vdom=vdom)
+
 
 class FortigateManager:
     """Manages multiple Fortigate devices"""
