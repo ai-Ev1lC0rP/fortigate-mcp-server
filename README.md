@@ -23,7 +23,47 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 ### Network Objects Management
 - ✅ Address objects (IP, range, FQDN)
 - ✅ Service objects (TCP / UDP)
-- 🔄 Create / modify objects TBD
+- ✅ VIP objects management
+- 🔄 Complete CRUD operations (partially implemented)
+
+### Security Profiles Management
+- ✅ Antivirus profiles (create, delete, list)
+- ✅ Web Filter profiles (create, delete, list)
+- ✅ IPS sensors (create, delete, list)
+- ✅ SSL/SSH inspection profiles (create, delete, list)
+- ✅ DNS Filter profiles (create, delete, list)
+
+### User Management
+- ✅ Local users (create, update, delete, list)
+- ✅ User groups (create, delete, list)
+- ✅ LDAP authentication servers (create, delete, list)
+- ✅ RADIUS authentication servers (create, delete, list)
+
+### VPN Management
+- ✅ IPSec Phase 1 interfaces (create, delete, list)
+- ✅ IPSec Phase 2 interfaces (create, delete, list)
+- ✅ IPSec tunnel status monitoring
+- ✅ SSL VPN settings and portals (create, delete, configure)
+- ✅ SSL VPN status monitoring
+- ✅ VPN certificates management
+
+### System Administration
+- ✅ Configuration backup and restore
+- ✅ System performance monitoring
+- ✅ Bandwidth usage statistics
+- ✅ Session table monitoring
+- ✅ System, traffic, and security logs
+- ✅ License and firmware information
+- ✅ System reboot and shutdown
+
+### Advanced Features
+- ✅ High Availability (status, configuration, failover)
+- ✅ SD-WAN zones and members management
+- ✅ SD-WAN performance and health monitoring
+- ✅ FortiView statistics and analytics
+- ✅ Threat dashboard and security ratings
+- ✅ Policy usage analytics
+- ✅ Application control statistics
 
 ### Routing Management
 - ✅ Static routes
