@@ -86,10 +86,24 @@ uv sync
 
 3. **Configure devices**
 ```bash
-cp config.yaml.example config.yaml
+cp config.yaml.template config.yaml
+# Edit config.yaml with your FortiGate device details
 ```
 
 4. **Start server**
 ```bash
 uv run python server.py
+```
+
+## Testing
+
+Run the comprehensive endpoint test suite:
+```bash
+# Using environment variables
+export FORTIGATE_HOST="your-fortigate-ip:port"
+export FORTIGATE_TOKEN="your-api-token"
+python test_endpoints.py
+
+# Or using config.yaml file
+python test_endpoints.py
 ```

@@ -1,1 +1,36 @@
+# Configuration files with credentials
 config.yaml
+*.env
+.env*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Credentials and secrets
+*credentials*
+*secrets*
+*tokens*

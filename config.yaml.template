@@ -1,0 +1,22 @@
+# FortiGate MCP Server Configuration Template
+# Copy this file to config.yaml and update with your device details
+
+devices:
+  "my-fortigate":
+    host: "YOUR_FORTIGATE_IP:PORT"  # e.g., "192.168.1.1:443" or "10.0.0.1:8443"
+    token: "YOUR_API_TOKEN_HERE"     # FortiGate REST API token
+    vdoms: ["root"]                  # List of VDOMs to manage (default: ["root"])
+    description: "My FortiGate Device"
+
+  # Add more devices as needed
+  # "fortigate-branch":
+  #   host: "192.168.10.1:10443"
+  #   token: "ANOTHER_API_TOKEN"
+  #   vdoms: ["root", "branch-vdom"]
+  #   description: "Branch Office FortiGate"
+
+# Configuration Notes:
+# 1. Generate API tokens in FortiGate GUI: System > Administrators > Create New > REST API Admin
+# 2. Common management ports: 443, 8443, 10443
+# 3. Ensure management interface allows HTTPS access
+# 4. Verify REST API is enabled in System > Settings
