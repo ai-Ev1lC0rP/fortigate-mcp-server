@@ -391,6 +391,137 @@ class FortigateAPI:
         result = self._make_request('GET', 'monitor/vpn/ssl', vdom=vdom)
         return result.get('results', {})
 
+### System Administration
+    def backup_config(self, scope: str = 'global') -> Dict:
+        """Backup configuration"""
+        params = {'scope': scope}
+        return self._make_request('GET', 'monitor/system/config/backup', params=params)
+
+    def restore_config(self, config_data: str) -> Dict:
+        """Restore configuration"""
+        data = {'config': config_data}
+        return self._make_request('POST', 'monitor/system/config/restore', data=data)
+
+    def get_system_performance(self, vdom: str = 'root') -> Dict:
+        """Get system performance metrics"""
+        result = self._make_request('GET', 'monitor/system/resource/usage', vdom=vdom)
+        return result.get('results', {})
+
+    def get_license_info(self) -> Dict:
+        """Get license information"""
+        result = self._make_request('GET', 'monitor/license/status')
+        return result.get('results', {})
+
+    def get_system_logs(self, lines: int = 100, level: str = 'information') -> List[Dict]:
+        """Get system logs"""
+        params = {'lines': lines, 'level': level}
+        result = self._make_request('GET', 'monitor/log/system', params=params)
+        return result.get('results', [])
+
+    def get_traffic_logs(self, count: int = 100, vdom: str = 'root') -> List[Dict]:
+        """Get traffic logs"""
+        params = {'count': count}
+        result = self._make_request('GET', 'monitor/log/traffic', vdom=vdom, params=params)
+        return result.get('results', [])
+
+    def get_security_logs(self, count: int = 100, vdom: str = 'root') -> List[Dict]:
+        """Get security logs"""
+        params = {'count': count}
+        result = self._make_request('GET', 'monitor/log/attack', vdom=vdom, params=params)
+        return result.get('results', [])
+
+    def reboot_system(self, event_log_message: str = "System reboot via API") -> Dict:
+        """Reboot system"""
+        data = {'event_log_message': event_log_message}
+        return self._make_request('POST', 'monitor/system/os/reboot', data=data)
+
+    def shutdown_system(self, event_log_message: str = "System shutdown via API") -> Dict:
+        """Shutdown system"""
+        data = {'event_log_message': event_log_message}
+        return self._make_request('POST', 'monitor/system/os/shutdown', data=data)
+
+    def get_session_table(self, count: int = 100, vdom: str = 'root') -> List[Dict]:
+        """Get session table"""
+        params = {'count': count}
+        result = self._make_request('GET', 'monitor/firewall/session', vdom=vdom, params=params)
+        return result.get('results', [])
+
+    def get_bandwidth_usage(self, vdom: str = 'root') -> Dict:
+        """Get bandwidth usage statistics"""
+        result = self._make_request('GET', 'monitor/system/interface/bandwidth', vdom=vdom)
+        return result.get('results', {})
+
+    def get_firmware_info(self) -> Dict:
+        """Get firmware information"""
+        result = self._make_request('GET', 'monitor/system/firmware')
+        return result.get('results', {})
+
+    def get_disk_usage(self) -> Dict:
+        """Get disk usage information"""
+        result = self._make_request('GET', 'monitor/system/storage')
+        return result.get('results', {})
+
+### High Availability
+    def get_ha_status(self) -> Dict:
+        """Get HA status"""
+        result = self._make_request('GET', 'monitor/system/ha-peer')
+        return result.get('results', {})
+
+    def configure_ha(self, ha_data: Dict, vdom: str = 'root') -> Dict:
+        """Configure HA settings"""
+        return self._make_request('PUT', 'cmdb/system/ha', vdom=vdom, data=ha_data)
+
+    def ha_failover(self) -> Dict:
+        """Trigger HA failover"""
+        return self._make_request('POST', 'monitor/system/ha-peer/disconnect')
+
+### SD-WAN
+    def get_sdwan_zones(self, vdom: str = 'root') -> List[Dict]:
+        """Get SD-WAN zones"""
+        result = self._make_request('GET', 'cmdb/system/sdwan/zone', vdom=vdom)
+        return result.get('results', [])
+
+    def create_sdwan_zone(self, zone_data: Dict, vdom: str = 'root') -> Dict:
+        """Create SD-WAN zone"""
+        return self._make_request('POST', 'cmdb/system/sdwan/zone', vdom=vdom, data=zone_data)
+
+    def get_sdwan_members(self, vdom: str = 'root') -> List[Dict]:
+        """Get SD-WAN members"""
+        result = self._make_request('GET', 'cmdb/system/sdwan/members', vdom=vdom)
+        return result.get('results', [])
+
+    def get_sdwan_performance(self, vdom: str = 'root') -> Dict:
+        """Get SD-WAN performance SLA"""
+        result = self._make_request('GET', 'monitor/system/sdwan/sla-log', vdom=vdom)
+        return result.get('results', {})
+
+    def get_sdwan_health_check(self, vdom: str = 'root') -> List[Dict]:
+        """Get SD-WAN health check status"""
+        result = self._make_request('GET', 'monitor/system/sdwan/health-check', vdom=vdom)
+        return result.get('results', [])
+
+### Advanced Monitoring
+    def get_fortiview_statistics(self, chart_type: str = 'top-sources', vdom: str = 'root') -> Dict:
+        """Get FortiView statistics"""
+        params = {'chart_type': chart_type}
+        result = self._make_request('GET', 'monitor/fortiview/statistics', vdom=vdom, params=params)
+        return result.get('results', {})
+
+    def get_threat_dashboard(self, vdom: str = 'root') -> Dict:
+        """Get threat dashboard data"""
+        result = self._make_request('GET', 'monitor/system/security-rating', vdom=vdom)
+        return result.get('results', {})
+
+    def get_policy_usage(self, vdom: str = 'root') -> List[Dict]:
+        """Get firewall policy usage statistics"""
+        result = self._make_request('GET', 'monitor/firewall/policy/usage', vdom=vdom)
+        return result.get('results', [])
+
+    def get_application_statistics(self, vdom: str = 'root') -> Dict:
+        """Get application control statistics"""
+        result = self._make_request('GET', 'monitor/application/name', vdom=vdom)
+        return result.get('results', {})
+
 
 class FortigateManager:
     """Manages multiple Fortigate devices"""
