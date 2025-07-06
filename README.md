@@ -13,10 +13,12 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 
 ### Firewall Policy Management
 - ✅ List existing policies
-- 🔄 Create new policies TBD
-- 🔄 Modify existing policies TBD
-- 🔄 Delete policies TBD
+- ✅ Create new policies
+- ✅ Modify existing policies
+- ✅ Delete policies
 - ✅ Policy validation
+- ✅ Policy search and filtering
+- ✅ Policy statistics
 
 ### Network Objects Management
 - ✅ Address objects (IP, range, FQDN)

@@ -45,7 +45,7 @@ def fortigate_get_bgp_peers(device_id: str, vdom: str = "root") -> str:
     """
     try:
         api = fortigate_manager.get_device(device_id)
-        routes = api.bgp_peers(vdom)
+        routes = api.get_bgp_peers(vdom)
         return json.dumps(routes, indent=2)
     except Exception as e:
         return f"Error: {str(e)}"

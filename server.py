@@ -54,10 +54,10 @@ def main():
 	print("=" * 50)
 	print("🔧 Available tools:")
 	print("  - Device Management: add_device, list_devices, get_system_status")
-	print("  - Firewall Policies: get policies")
+	print("  - Firewall Policies: get, create, update, delete, search, validate, statistics")
 	print("  - Network Objects: address/service objects")
 	print("  - Routing: static routes, routing tables, interfaces")
-	print("  - Utilities: validate_policy")
+	print("  - Utilities: validate_policy, policy_statistics")
 	print("=" * 50)
 	print("📡 Server ready - connect your MCP client!")
 
