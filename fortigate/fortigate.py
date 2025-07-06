@@ -323,6 +323,74 @@ class FortigateAPI:
         """Delete RADIUS authentication server"""
         return self._make_request('DELETE', f'cmdb/user/radius/{server_name}', vdom=vdom)
 
+### VPN Management
+    def get_ipsec_phase1(self, vdom: str = 'root') -> List[Dict]:
+        """Get IPSec phase 1 configurations"""
+        result = self._make_request('GET', 'cmdb/vpn.ipsec/phase1-interface', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ipsec_phase1(self, phase1_data: Dict, vdom: str = 'root') -> Dict:
+        """Create IPSec phase 1 interface"""
+        return self._make_request('POST', 'cmdb/vpn.ipsec/phase1-interface', vdom=vdom, data=phase1_data)
+
+    def update_ipsec_phase1(self, interface_name: str, phase1_data: Dict, vdom: str = 'root') -> Dict:
+        """Update IPSec phase 1 interface"""
+        return self._make_request('PUT', f'cmdb/vpn.ipsec/phase1-interface/{interface_name}', vdom=vdom, data=phase1_data)
+
+    def delete_ipsec_phase1(self, interface_name: str, vdom: str = 'root') -> Dict:
+        """Delete IPSec phase 1 interface"""
+        return self._make_request('DELETE', f'cmdb/vpn.ipsec/phase1-interface/{interface_name}', vdom=vdom)
+
+    def get_ipsec_phase2(self, vdom: str = 'root') -> List[Dict]:
+        """Get IPSec phase 2 configurations"""
+        result = self._make_request('GET', 'cmdb/vpn.ipsec/phase2-interface', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ipsec_phase2(self, phase2_data: Dict, vdom: str = 'root') -> Dict:
+        """Create IPSec phase 2 interface"""
+        return self._make_request('POST', 'cmdb/vpn.ipsec/phase2-interface', vdom=vdom, data=phase2_data)
+
+    def delete_ipsec_phase2(self, interface_name: str, vdom: str = 'root') -> Dict:
+        """Delete IPSec phase 2 interface"""
+        return self._make_request('DELETE', f'cmdb/vpn.ipsec/phase2-interface/{interface_name}', vdom=vdom)
+
+    def get_ssl_vpn_settings(self, vdom: str = 'root') -> Dict:
+        """Get SSL VPN settings"""
+        result = self._make_request('GET', 'cmdb/vpn.ssl/settings', vdom=vdom)
+        return result.get('results', {})
+
+    def update_ssl_vpn_settings(self, settings_data: Dict, vdom: str = 'root') -> Dict:
+        """Update SSL VPN settings"""
+        return self._make_request('PUT', 'cmdb/vpn.ssl/settings', vdom=vdom, data=settings_data)
+
+    def get_ssl_vpn_portals(self, vdom: str = 'root') -> List[Dict]:
+        """Get SSL VPN portals"""
+        result = self._make_request('GET', 'cmdb/vpn.ssl.web/portal', vdom=vdom)
+        return result.get('results', [])
+
+    def create_ssl_vpn_portal(self, portal_data: Dict, vdom: str = 'root') -> Dict:
+        """Create SSL VPN portal"""
+        return self._make_request('POST', 'cmdb/vpn.ssl.web/portal', vdom=vdom, data=portal_data)
+
+    def delete_ssl_vpn_portal(self, portal_name: str, vdom: str = 'root') -> Dict:
+        """Delete SSL VPN portal"""
+        return self._make_request('DELETE', f'cmdb/vpn.ssl.web/portal/{portal_name}', vdom=vdom)
+
+    def get_vpn_certificates(self, vdom: str = 'root') -> List[Dict]:
+        """Get VPN certificates"""
+        result = self._make_request('GET', 'cmdb/vpn.certificate/local', vdom=vdom)
+        return result.get('results', [])
+
+    def get_ipsec_tunnels_status(self, vdom: str = 'root') -> List[Dict]:
+        """Get IPSec tunnel status"""
+        result = self._make_request('GET', 'monitor/vpn/ipsec', vdom=vdom)
+        return result.get('results', [])
+
+    def get_ssl_vpn_status(self, vdom: str = 'root') -> Dict:
+        """Get SSL VPN status"""
+        result = self._make_request('GET', 'monitor/vpn/ssl', vdom=vdom)
+        return result.get('results', {})
+
 
 class FortigateManager:
     """Manages multiple Fortigate devices"""
