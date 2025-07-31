@@ -1,0 +1,3 @@
+# Sysadmin
+
+::: mcptool.sysadmin
