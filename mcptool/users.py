@@ -272,8 +272,8 @@ def fortigate_get_ldap_servers(device_id: str, vdom: str = "root") -> str:
 
 @mcp.tool()
 def fortigate_create_ldap_server(device_id: str, name: str, server: str,
-                                cnid: str = "cn",
                                 dn: str,
+                                cnid: str = "cn",
                                 type: str = "simple",
                                 username: Optional[str] = None,
                                 password: Optional[str] = None,
