@@ -73,6 +73,76 @@ def fortigate_get_interfaces(device_id: str, vdom: str = "root") -> str:
         return f"Error: {str(e)}"
 
 
+@mcp.tool()
+def fortigate_configure_interface(device_id: str,
+    name: str,
+    ip: str,
+    allowaccess: str,
+    vdom: str = "root") -> str:
+    """
+    Configures an interface.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the interface to configure.
+        ip: The IP address and netmask for the interface.
+        allowaccess: The allowed access types for the interface.
+        vdom: The VDOM to configure the interface in.
+
+    Returns:
+        The result of the interface configuration.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {
+            "name": name,
+            "ip": ip,
+            "allowaccess": allowaccess,
+        }
+        result = api.configure_interface(name, data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_create_vlan(device_id: str,
+    name: str,
+    interface: str,
+    vlanid: int,
+    ip: str,
+    allowaccess: str,
+    vdom: str = "root") -> str:
+    """
+    Creates a new VLAN.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the VLAN to create.
+        interface: The interface to create the VLAN on.
+        vlanid: The VLAN ID.
+        ip: The IP address and netmask for the VLAN.
+        allowaccess: The allowed access types for the VLAN.
+        vdom: The VDOM to create the VLAN in.
+
+    Returns:
+        The result of the VLAN creation.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {
+            "name": name,
+            "interface": interface,
+            "vlanid": vlanid,
+            "ip": ip,
+            "allowaccess": allowaccess,
+        }
+        result = api.create_vlan(data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
 # === UTILITY FUNCTIONS ===
 
 @mcp.tool()
