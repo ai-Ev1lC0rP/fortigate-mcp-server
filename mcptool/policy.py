@@ -465,6 +465,309 @@ def fortigate_create_firewall_address(device_id: str,
 
 # === ADDRESS OBJECTS ===
 @mcp.tool()
+def fortigate_delete_firewall_address(device_id: str, name: str, vdom: str = "root") -> str:
+    """
+    Deletes address object by name
+
+    Args:
+        device_id: Device ID
+        name: Name of address object to delete
+        vdom: Target VDOM (default: root)
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        result = api.delete_address_object(name, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_update_firewall_address(device_id: str,
+    name: str,
+    type: Optional[str] = None,
+    subnet: Optional[str] = None,
+    start_ip: Optional[str] = None,
+    end_ip: Optional[str] = None,
+    fqdn: Optional[str] = None,
+    country: Optional[str] = None,
+    interface: Optional[str] = None,
+    comments: Optional[str] = None,
+    vdom: str = "root") -> str:
+    """
+    Updates an existing address object on FortiGate
+
+    Args:
+        device_id: Device identifier
+        name: Address object name to update
+        type: Address type (ipmask, iprange, fqdn, geography, interface-subnet)
+        subnet: Subnet in CIDR format (for type=ipmask)
+        start_ip: Start IP address (for type=iprange)
+        end_ip: End IP address (for type=iprange)
+        fqdn: Fully qualified domain name (for type=fqdn)
+        country: Country code (for type=geography)
+        interface: Interface name (for type=interface-subnet)
+        comments: Optional comments
+        vdom: Target VDOM (default: root)
+
+    Returns:
+        Result of address object update
+    """
+    try:
+        # Prepare address object data
+        address_data = {}
+        if type:
+            address_data["type"] = type
+        if subnet:
+            address_data["subnet"] = subnet
+        if start_ip:
+            address_data["start-ip"] = start_ip
+        if end_ip:
+            address_data["end-ip"] = end_ip
+        if fqdn:
+            address_data["fqdn"] = fqdn
+        if country:
+            address_data["country"] = country
+        if interface:
+            address_data["interface"] = interface
+        if comments:
+            address_data["comment"] = comments
+
+        if not address_data:
+            return "Error: No fields provided for update."
+
+        api = fortigate_manager.get_device(device_id)
+        result = api.update_address_object(name, address_data, vdom)
+
+        return json.dumps(result, indent=2)
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_create_service_object(device_id: str,
+    name: str,
+    protocol: str = "TCP/UDP/SCTP",
+    tcp_portrange: Optional[str] = None,
+    udp_portrange: Optional[str] = None,
+    comment: Optional[str] = None,
+    vdom: str = "root") -> str:
+    """
+    Creates a new service object.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the service object.
+        protocol: The protocol of the service.
+        tcp_portrange: The TCP port range.
+        udp_portrange: The UDP port range.
+        comment: A comment for the service object.
+        vdom: The VDOM to create the service object in.
+
+    Returns:
+        The result of the service object creation.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {
+            "name": name,
+            "protocol": protocol,
+        }
+        if tcp_portrange:
+            data["tcp-portrange"] = tcp_portrange
+        if udp_portrange:
+            data["udp-portrange"] = udp_portrange
+        if comment:
+            data["comment"] = comment
+        result = api.create_service_object(data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_delete_service_object(device_id: str, name: str, vdom: str = "root") -> str:
+    """
+    Deletes a service object.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the service object to delete.
+        vdom: The VDOM to delete the service object from.
+
+    Returns:
+        The result of the service object deletion.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        result = api.delete_service_object(name, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_update_service_object(device_id: str,
+    name: str,
+    protocol: Optional[str] = None,
+    tcp_portrange: Optional[str] = None,
+    udp_portrange: Optional[str] = None,
+    comment: Optional[str] = None,
+    vdom: str = "root") -> str:
+    """
+    Updates a service object.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the service object to update.
+        protocol: The protocol of the service.
+        tcp_portrange: The TCP port range.
+        udp_portrange: The UDP port range.
+        comment: A comment for the service object.
+        vdom: The VDOM to update the service object in.
+
+    Returns:
+        The result of the service object update.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {}
+        if protocol:
+            data["protocol"] = protocol
+        if tcp_portrange:
+            data["tcp-portrange"] = tcp_portrange
+        if udp_portrange:
+            data["udp-portrange"] = udp_portrange
+        if comment:
+            data["comment"] = comment
+
+        if not data:
+            return "Error: No fields provided for update."
+
+        result = api.update_service_object(name, data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_create_vip_object(device_id: str,
+    name: str,
+    extip: str,
+    mappedip: str,
+    extintf: Optional[str] = None,
+    portforward: Optional[bool] = False,
+    protocol: Optional[str] = None,
+    extport: Optional[str] = None,
+    mappedport: Optional[str] = None,
+    comment: Optional[str] = None,
+    vdom: str = "root") -> str:
+    """
+    Creates a new VIP object.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the VIP object.
+        extip: The external IP address.
+        mappedip: The mapped IP address.
+        extintf: The external interface.
+        portforward: Whether to enable port forwarding.
+        protocol: The protocol to use for port forwarding.
+        extport: The external port.
+        mappedport: The mapped port.
+        comment: A comment for the VIP object.
+        vdom: The VDOM to create the VIP object in.
+
+    Returns:
+        The result of the VIP object creation.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {
+            "name": name,
+            "extip": extip,
+            "mappedip": mappedip,
+        }
+        if extintf:
+            data["extintf"] = extintf
+        if portforward:
+            data["portforward"] = "enable" if portforward else "disable"
+        if protocol:
+            data["protocol"] = protocol
+        if extport:
+            data["extport"] = extport
+        if mappedport:
+            data["mappedport"] = mappedport
+        if comment:
+            data["comment"] = comment
+        result = api.create_vip_object(data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
+def fortigate_update_vip_object(device_id: str,
+    name: str,
+    extip: Optional[str] = None,
+    mappedip: Optional[str] = None,
+    extintf: Optional[str] = None,
+    portforward: Optional[bool] = None,
+    protocol: Optional[str] = None,
+    extport: Optional[str] = None,
+    mappedport: Optional[str] = None,
+    comment: Optional[str] = None,
+    vdom: str = "root") -> str:
+    """
+    Updates a VIP object.
+
+    Args:
+        device_id: The ID of the FortiGate device.
+        name: The name of the VIP object to update.
+        extip: The external IP address.
+        mappedip: The mapped IP address.
+        extintf: The external interface.
+        portforward: Whether to enable port forwarding.
+        protocol: The protocol to use for port forwarding.
+        extport: The external port.
+        mappedport: The mapped port.
+        comment: A comment for the VIP object.
+        vdom: The VDOM to update the VIP object in.
+
+    Returns:
+        The result of the VIP object update.
+    """
+    try:
+        api = fortigate_manager.get_device(device_id)
+        data = {}
+        if extip:
+            data["extip"] = extip
+        if mappedip:
+            data["mappedip"] = mappedip
+        if extintf:
+            data["extintf"] = extintf
+        if portforward is not None:
+            data["portforward"] = "enable" if portforward else "disable"
+        if protocol:
+            data["protocol"] = protocol
+        if extport:
+            data["extport"] = extport
+        if mappedport:
+            data["mappedport"] = mappedport
+        if comment:
+            data["comment"] = comment
+
+        if not data:
+            return "Error: No fields provided for update."
+
+        result = api.update_vip_object(name, data, vdom)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@mcp.tool()
 def fortigate_get_vip_objects(device_id: str,vdom: str = "root") -> str:
     """Gets configured vip objects """
     try:

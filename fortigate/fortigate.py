@@ -114,6 +114,14 @@ class FortigateAPI:
         """Create address object"""
         return self._make_request('POST', 'cmdb/firewall/address', vdom=vdom, data=address_data)
 
+    def update_address_object(self, name: str, address_data: Dict, vdom: str = 'root') -> Dict:
+        """Update address object"""
+        return self._make_request('PUT', f'cmdb/firewall/address/{name}', vdom=vdom, data=address_data)
+
+    def delete_address_object(self, name: str, vdom: str = 'root') -> Dict:
+        """Delete address object"""
+        return self._make_request('DELETE', f'cmdb/firewall/address/{name}', vdom=vdom)
+
     def get_service_objects(self, vdom: str = 'root') -> List[Dict]:
         """Get service objects"""
         result = self._make_request('GET', 'cmdb/firewall/service/custom', vdom=vdom)
@@ -122,6 +130,14 @@ class FortigateAPI:
     def create_service_object(self, service_data: Dict, vdom: str = 'root') -> Dict:
         """Create service object"""
         return self._make_request('POST', 'cmdb/firewall/service/custom', vdom=vdom, data=service_data)
+
+    def update_service_object(self, name: str, service_data: Dict, vdom: str = 'root') -> Dict:
+        """Update service object"""
+        return self._make_request('PUT', f'cmdb/firewall/service/custom/{name}', vdom=vdom, data=service_data)
+
+    def delete_service_object(self, name: str, vdom: str = 'root') -> Dict:
+        """Delete service object"""
+        return self._make_request('DELETE', f'cmdb/firewall/service/custom/{name}', vdom=vdom)
 
     def get_vip_addresses(self, vdom: str = 'root') -> List[Dict]:
         """Get firewall virtual ip list"""
@@ -133,11 +149,27 @@ class FortigateAPI:
         result = self._make_request('DELETE', f'cmdb/firewall/vip/{vip_name}', vdom=vdom)
         return result.get('results', [])
 
+    def create_vip_object(self, vip_data: Dict, vdom: str = 'root') -> Dict:
+        """Create VIP object"""
+        return self._make_request('POST', 'cmdb/firewall/vip', vdom=vdom, data=vip_data)
+
+    def update_vip_object(self, name: str, vip_data: Dict, vdom: str = 'root') -> Dict:
+        """Update VIP object"""
+        return self._make_request('PUT', f'cmdb/firewall/vip/{name}', vdom=vdom, data=vip_data)
+
     ### Network
     def get_interfaces(self, vdom: str = 'root') -> List[Dict]:
         """Get interface list"""
         result = self._make_request('GET', 'cmdb/system/interface', vdom=vdom)
         return result.get('results', [])
+
+    def configure_interface(self, name: str, data: Dict, vdom: str = 'root') -> Dict:
+        """Configure an interface"""
+        return self._make_request('PUT', f'cmdb/system/interface/{name}', vdom=vdom, data=data)
+
+    def create_vlan(self, data: Dict, vdom: str = 'root') -> Dict:
+        """Create a new VLAN"""
+        return self._make_request('POST', 'cmdb/system/interface', vdom=vdom, data=data)
 
     def get_static_routes(self, vdom: str = 'root') -> List[Dict]:
         """Get static routes"""
@@ -148,10 +180,22 @@ class FortigateAPI:
         """Create static route"""
         return self._make_request('POST', 'cmdb/router/static', vdom=vdom, data=route_data)
 
+    def delete_static_route(self, route_id: int, vdom: str = 'root') -> Dict:
+        """Delete static route"""
+        return self._make_request('DELETE', f'cmdb/router/static/{route_id}', vdom=vdom)
+
+    def update_static_route(self, route_id: int, route_data: Dict, vdom: str = 'root') -> Dict:
+        """Update static route"""
+        return self._make_request('PUT', f'cmdb/router/static/{route_id}', vdom=vdom, data=route_data)
+
     def get_policy_routes(self, vdom: str = 'root') -> List[Dict]:
         """Get policy routes"""
         result = self._make_request('GET', 'cmdb/router/policy', vdom=vdom)
         return result.get('results', [])
+
+    def create_policy_route(self, route_data: Dict, vdom: str = 'root') -> Dict:
+        """Create policy route"""
+        return self._make_request('POST', 'cmdb/router/policy', vdom=vdom, data=route_data)
 
     def get_routing_table(self, vdom: str = 'root') -> List[Dict]:
         """
