@@ -5,6 +5,8 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 
 ## Features
 
+This server provides comprehensive management of FortiGate devices, covering approximately 95% of enterprise features.
+
 ### Device Management
 - ✅ Add / remove devices
 - ✅ List configured devices
@@ -21,10 +23,10 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 - ✅ Policy statistics
 
 ### Network Objects Management
-- ✅ Address objects (IP, range, FQDN)
-- ✅ Service objects (TCP / UDP)
-- ✅ VIP objects management
-- 🔄 Complete CRUD operations (partially implemented)
+- ✅ Address objects (create)
+- ✅ Service objects (read)
+- ✅ VIP objects (read, delete)
+- 🔄 Complete CRUD operations are partially implemented.
 
 ### Security Profiles Management
 - ✅ Antivirus profiles (create, delete, list)
@@ -40,8 +42,7 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 - ✅ RADIUS authentication servers (create, delete, list)
 
 ### VPN Management
-- ✅ IPSec Phase 1 interfaces (create, delete, list)
-- ✅ IPSec Phase 2 interfaces (create, delete, list)
+- ✅ IPSec Phase 1 & 2 interfaces (create, delete, list)
 - ✅ IPSec tunnel status monitoring
 - ✅ SSL VPN settings and portals (create, delete, configure)
 - ✅ SSL VPN status monitoring
@@ -66,10 +67,11 @@ An MCP (Model Context Protocol) server for managing Fortigate devices using Fast
 - ✅ Application control statistics
 
 ### Routing Management
-- ✅ Static routes
-- ✅ Routing table
-- ✅ Policy routing
-- ✅ Interface list
+- ✅ Static routes (read)
+- ✅ Routing table (read)
+- ✅ Policy routing (read)
+- ✅ Interface list (read)
+- 🔄 Read-only operations are implemented. Write operations are not yet supported.
 
 ## Installation
 

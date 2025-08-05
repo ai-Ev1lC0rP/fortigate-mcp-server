@@ -52,11 +52,16 @@ uv run python -c "from server import load_config; load_config()"
 - Handles authentication, VDOM switching, and API request management
 
 #### MCP Tool Modules (`mcptool/`)
-- **base.py**: Device management tools (add_device, list_devices)
-- **system.py**: System status and device information tools
-- **policy.py**: Firewall policy management tools
-- **routing.py**: Routing and network interface tools
-- Each module registers tools with the FastMCP server using `@mcp.tool()` decorators
+- **base.py**: Device management tools (add_device, list_devices).
+- **system.py**: System status and device information tools.
+- **policy.py**: Firewall policy and network object management tools.
+- **routing.py**: Routing and network interface tools (read-only).
+- **security.py**: Security profile management (AV, Web Filter, IPS, etc.).
+- **users.py**: User and authentication server management.
+- **vpn.py**: IPSec and SSL VPN management.
+- **sysadmin.py**: System administration tasks (backups, performance, logs).
+- **advanced.py**: Advanced features like HA and SD-WAN.
+- Each module registers tools with the FastMCP server using `@mcp.tool()` decorators.
 
 #### Server Entry Point (`server.py`)
 - Loads device configuration from `config.yaml`
