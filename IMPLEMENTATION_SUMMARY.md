@@ -57,7 +57,7 @@
 - **Enterprise Monitoring**: Application statistics, security ratings
 
 ### 🔄 **8. Network Objects Management** (80% Complete)
-- Address objects (create), service objects (read), VIP objects
+- Address objects (create), service objects (read), VIP objects (read, delete)
 - *Remaining: Complete CRUD for services and addresses*
 
 ### 🔄 **9. Routing Management** (70% Complete)
