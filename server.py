@@ -11,38 +11,60 @@ sys.path.append(str(Path(__file__).parent))
 
 
 def load_config(config_file="config.yaml"):
-	"""Load configuration from YAML file"""
-	try:
-		config_path = Path(config_file)
-		if not config_path.exists():
-			print(f"⚠️  Config file {config_file} not found")
-			print("Starting with empty configuration - use fortigate_add_device to add devices")
-			return
+        """Load configuration from YAML file or environment variables"""
+        devices = {}
 
-		with open(config_path, 'r') as f:
-			config = yaml.safe_load(f)
+        config_path = Path(config_file)
+        if config_path.exists():
+                try:
+                        with open(config_path, 'r') as f:
+                                file_config = yaml.safe_load(f) or {}
+                                devices.update(file_config.get('devices', {}))
+                except yaml.YAMLError as e:
+                        print(f"❌ Error parsing config file: {e}")
+        else:
+                print(f"⚠️  Config file {config_file} not found")
 
-		# Load devices from configuration
-		devices_loaded = 0
-		for device_id, device_config in config.get('devices', {}).items():
-			try:
-				fortigate_manager.add_device(
-					device_id=device_id,
-					host=device_config['host'],
-					token=device_config['token'],
-					vdoms=device_config.get('vdoms', ['root'])
-				)
-				print(f"✅ Loaded device: {device_id} - {device_config.get('description', device_config['host'])}")
-				devices_loaded += 1
-			except Exception as e:
-				print(f"❌ Error loading device {device_id}: {e}")
+        env_config = os.environ.get("FORTIGATE_CONFIG")
+        if env_config:
+                try:
+                        env_data = yaml.safe_load(env_config) or {}
+                        devices.update(env_data.get('devices', {}))
+                except yaml.YAMLError as e:
+                        print(f"❌ Error parsing FORTIGATE_CONFIG: {e}")
 
-		print(f"📡 Loaded {devices_loaded} devices successfully")
+        device_id = os.environ.get("FORTIGATE_DEVICE_ID")
+        host = os.environ.get("FORTIGATE_HOST")
+        token = os.environ.get("FORTIGATE_TOKEN")
+        if device_id and host and token:
+                vdoms = os.environ.get("FORTIGATE_VDOMS", "root")
+                description = os.environ.get("FORTIGATE_DESCRIPTION", host)
+                devices[device_id] = {
+                        "host": host,
+                        "token": token,
+                        "vdoms": [v.strip() for v in vdoms.split(',') if v.strip()],
+                        "description": description,
+                }
 
-	except yaml.YAMLError as e:
-		print(f"❌ Error parsing config file: {e}")
-	except Exception as e:
-		print(f"❌ Error loading config: {e}")
+        if not devices:
+                print("Starting with empty configuration - use fortigate_add_device to add devices")
+                return
+
+        devices_loaded = 0
+        for device_id, device_config in devices.items():
+                try:
+                        fortigate_manager.add_device(
+                                device_id=device_id,
+                                host=device_config['host'],
+                                token=device_config['token'],
+                                vdoms=device_config.get('vdoms', ['root'])
+                        )
+                        print(f"✅ Loaded device: {device_id} - {device_config.get('description', device_config['host'])}")
+                        devices_loaded += 1
+                except Exception as e:
+                        print(f"❌ Error loading device {device_id}: {e}")
+
+        print(f"📡 Loaded {devices_loaded} devices successfully")
 
 
 def main():

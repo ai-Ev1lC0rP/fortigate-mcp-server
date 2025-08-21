@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "fortigate": {
+      "command": "uv",
+      "args": ["run", "python", "server.py"],
+      "env": {
+        "FORTIGATE_DEVICE_ID": "my-fortigate",
+        "FORTIGATE_HOST": "YOUR_FORTIGATE_IP:PORT",
+        "FORTIGATE_TOKEN": "YOUR_API_TOKEN",
+        "FORTIGATE_VDOMS": "root"
+      }
+    }
+  }
+}

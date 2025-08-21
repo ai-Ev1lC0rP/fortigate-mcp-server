@@ -92,9 +92,41 @@ cp config.yaml.template config.yaml
 # Edit config.yaml with your FortiGate device details
 ```
 
+You can also configure devices entirely through environment variables. Set the following to define a single device:
+
+```bash
+export FORTIGATE_DEVICE_ID="my-fortigate"
+export FORTIGATE_HOST="192.168.1.1:10443"
+export FORTIGATE_TOKEN="API_TOKEN"
+export FORTIGATE_VDOMS="root"  # comma-separated list
+```
+
+For more complex setups, you may provide a full YAML configuration string via the `FORTIGATE_CONFIG` environment variable.
+
 4. **Start server**
 ```bash
 uv run python server.py
+```
+
+### Claude MCP configuration
+
+To use this server with Claude's MCP client, create `.claude/mcp.json` in the project root:
+
+```json
+{
+  "mcpServers": {
+    "fortigate": {
+      "command": "uv",
+      "args": ["run", "python", "server.py"],
+      "env": {
+        "FORTIGATE_DEVICE_ID": "my-fortigate",
+        "FORTIGATE_HOST": "YOUR_FORTIGATE_IP:PORT",
+        "FORTIGATE_TOKEN": "YOUR_API_TOKEN",
+        "FORTIGATE_VDOMS": "root"
+      }
+    }
+  }
+}
 ```
 
 ## Testing
